@@ -520,7 +520,7 @@ var entities = map[string]string{
 	"Tfr":                 "\U0001D517",
 	"Therefore":           "\u2234",
 	"Theta":               "\u0398",
-	"ThickSpace":          "\u205F\u200A   ",
+	"ThickSpace":          "\u205F\u200A",
 	"ThinSpace":           "\u2009",
 	"Tilde":               "\u223C",
 	"TildeEqual":          "\u2243",
