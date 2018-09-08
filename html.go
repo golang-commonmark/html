@@ -12,7 +12,7 @@ import (
 	"unicode/utf8"
 )
 
-const runeError = string(utf8.RuneError)
+const BadEntity = string(utf8.RuneError)
 
 var htmlEscapeReplacer = strings.NewReplacer(
 	"&", "&amp;",
@@ -129,7 +129,7 @@ func ParseEntity(s string) (string, int) {
 			case b == ';':
 				c, _ := strconv.ParseInt(s[i-n:i], 10, 32)
 				if !isValidEntityCode(c) {
-					return runeError, i + 1
+					return BadEntity, i + 1
 				}
 				return string(rune(c)), i + 1
 			default:
@@ -146,10 +146,10 @@ func ParseEntity(s string) (string, int) {
 			case b == ';':
 				c, err := strconv.ParseInt(s[i-n:i], 16, 32)
 				if err != nil {
-					return runeError, i + 1
+					return BadEntity, i + 1
 				}
 				if !isValidEntityCode(c) {
-					return runeError, i + 1
+					return BadEntity, i + 1
 				}
 				return string(rune(c)), i + 1
 			default:
