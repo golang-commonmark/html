@@ -1,16 +1,8 @@
-// This program is free software: you can redistribute it and/or modify it
-// under the terms of the GNU General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// This program is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
-// Public License for more details.
-//
-// You should have received a copy of the GNU General Public License along
-// with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright 2015 The Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
+// Package html provides functions for escaping HTML and for parsing and replacing HTML entities.
 package html
 
 import (
@@ -18,8 +10,6 @@ import (
 	"strconv"
 	"strings"
 	"unicode/utf8"
-
-	"github.com/opennota/byteutil"
 )
 
 const runeError = string(utf8.RuneError)
@@ -64,6 +54,16 @@ func isValidEntityCode(c int64) bool {
 	return true
 }
 
+func letter(b byte) bool { return b >= 'a' && b <= 'z' || b >= 'A' && b <= 'Z' }
+
+func digit(b byte) bool { return b >= '0' && b <= '9' }
+
+func alphanum(b byte) bool { return letter(b) || digit(b) }
+
+func hexDigit(b byte) bool {
+	return digit(b) || b >= 'a' && b <= 'f' || b >= 'A' && b <= 'F'
+}
+
 func ParseEntity(s string) (string, int) {
 	st := 0
 	var n int
@@ -76,7 +76,7 @@ func ParseEntity(s string) (string, int) {
 			switch {
 			case b == '#':
 				st = 1
-			case byteutil.IsLetter(b):
+			case letter(b):
 				n = 1
 				st = 2
 			default:
@@ -87,7 +87,7 @@ func ParseEntity(s string) (string, int) {
 			switch {
 			case b == 'x' || b == 'X':
 				st = 3
-			case byteutil.IsDigit(b):
+			case digit(b):
 				n = 1
 				st = 4
 			default:
@@ -96,7 +96,7 @@ func ParseEntity(s string) (string, int) {
 
 		case 2: // &q
 			switch {
-			case byteutil.IsAlphaNum(b):
+			case alphanum(b):
 				n++
 				if n > 31 {
 					return "", 0
@@ -112,7 +112,7 @@ func ParseEntity(s string) (string, int) {
 
 		case 3: // &#x
 			switch {
-			case byteutil.IsHexDigit(b):
+			case hexDigit(b):
 				n = 1
 				st = 5
 			default:
@@ -121,7 +121,7 @@ func ParseEntity(s string) (string, int) {
 
 		case 4: // &#0
 			switch {
-			case byteutil.IsDigit(b):
+			case digit(b):
 				n++
 				if n > 8 {
 					return "", 0
@@ -138,7 +138,7 @@ func ParseEntity(s string) (string, int) {
 
 		case 5: // &#x0
 			switch {
-			case byteutil.IsHexDigit(b):
+			case hexDigit(b):
 				n++
 				if n > 8 {
 					return "", 0

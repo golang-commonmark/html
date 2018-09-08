@@ -1,2 +1,8 @@
-html [![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html) [![GoDoc](http://godoc.org/github.com/opennota/html?status.svg)](http://godoc.org/github.com/opennota/html)
+html [![License](https://img.shields.io/badge/licence-BSD--2--Clause-blue.svg)](https://opensource.org/licenses/BSD-2-Clause) [![GoDoc](http://godoc.org/github.com/golang-commonmark/html?status.svg)](http://godoc.org/github.com/golang-commonmark/html)
 ====
+
+Package html provides functions for escaping HTML and for parsing and replacing HTML entities.
+
+## Install
+
+    go get -u github.com/golang-commonmark/html
